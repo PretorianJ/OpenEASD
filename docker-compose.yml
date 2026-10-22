@@ -26,15 +26,24 @@ services:
       OPENEASD_ROLE: "web"
       SECRET_KEY: "thesecretkey"
       DEBUG: "false"
-      # Changed to wildcard to prevent proxy/host header mismatches
+      
+      # Django Network & Security Settings
       ALLOWED_HOSTS: "*"
-      # Covers http/https and port variations for the local IP and localhost
       CSRF_TRUSTED_ORIGINS: "http://192.168.9.176,http://192.168.9.176:8000,https://192.168.9.176,https://192.168.9.176:8000,http://localhost:8000,http://127.0.0.1:8000"
+      
+      # HTTP Compatibility Settings to prevent secure cookie drops locally
+      CSRF_COOKIE_SECURE: "false"
+      SESSION_COOKIE_SECURE: "false"
+      SECURE_SSL_REDIRECT: "false"
+      
+      # Database Settings
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_NAME: "openeasd"
       DB_USER: "openeasd"
       DB_PASSWORD: "Joseph270591!!"
+      
+      # Tool Settings
       DBOS_SCAN_CONCURRENCY: "2"
       TOOL_SUBFINDER: "/usr/local/bin/pdtm-tools/subfinder"
       TOOL_DNSX: "/usr/local/bin/pdtm-tools/dnsx"
