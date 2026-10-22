@@ -1,13 +1,11 @@
-# 3-tier path: external PostgreSQL + separate web and worker (privilege-separated,
-# scalable). For the single-container alternative (embedded Postgres, one image),
-# see docker-compose.singleimage.yml.
+
 services:
   db:
     image: postgres:17-alpine
     environment:
       POSTGRES_DB: openeasd
       POSTGRES_USER: openeasd
-      POSTGRES_PASSWORD: "Joseph270591!!"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in Portainer}"
     volumes:
       - openeasd_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -20,33 +18,23 @@ services:
   web:
     build:
       context: .
-      target: web          # slim image, no scanner tools
+      target: web
     ports:
       - "8000:8000"
     volumes:
       - openeasd_logs:/app/logs
     environment: &app_env
-      OPENEASD_ROLE: "web"          # this container owns migrations/collectstatic/admin
-      SECRET_KEY: "thesecretkey"
-      DEBUG: "false"
-      ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
+      OPENEASD_ROLE: "web"
+      SECRET_KEY: "${SECRET_KEY:?Set SECRET_KEY in Portainer}"
       DEBUG: "false"
       ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
       CSRF_TRUSTED_ORIGINS: "http://192.168.9.176:8000"
-      # PostgreSQL (DBOS system tables share this DB in a `dbos` schema)
-      DB_HOST: "db"
-      # PostgreSQL (DBOS system tables share this DB in a `dbos` schema)
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_NAME: "openeasd"
       DB_USER: "openeasd"
-      DB_PASSWORD: "Joseph270591!!"
-      # DBOS scan concurrency (Postgres has no single-writer lock)
+      DB_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in Portainer}"
       DBOS_SCAN_CONCURRENCY: "2"
-      # Cloudflare Workers AI (optional — off unless set; or enter in the UI)
-      # CLOUDFLARE_ACCOUNT_ID: ""
-      # CLOUDFLARE_API_TOKEN: ""
-      # Tool paths
       TOOL_SUBFINDER: "/usr/local/bin/pdtm-tools/subfinder"
       TOOL_DNSX: "/usr/local/bin/pdtm-tools/dnsx"
       TOOL_NAABU: "/usr/local/bin/pdtm-tools/naabu"
@@ -62,16 +50,14 @@ services:
   worker:
     build:
       context: .
-      target: worker       # full image with nmap + scanner tools
-    # DBOS durable-execution worker: executes scan/AI workflows + runs the
-    # @scheduled cron workflows. NET_RAW needed for nmap/naabu raw sockets.
+      target: worker
     cap_add:
       - NET_RAW
     volumes:
       - openeasd_logs:/app/logs
     environment:
       <<: *app_env
-      OPENEASD_ROLE: "worker"       # skips migrations; waits for web to apply them
+      OPENEASD_ROLE: "worker"
     depends_on:
       db:
         condition: service_healthy
