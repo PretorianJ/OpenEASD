@@ -5,7 +5,7 @@ services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: openeasd
+      POSTGRES_DB: joseph270591
       POSTGRES_USER: openeasd
       POSTGRES_PASSWORD: "change-me-in-production"
     volumes:
@@ -27,15 +27,15 @@ services:
       - openeasd_logs:/app/logs
     environment: &app_env
       OPENEASD_ROLE: "web"          # this container owns migrations/collectstatic/admin
-      SECRET_KEY: "change-me-in-production"
+      SECRET_KEY: "thesecretkey"
       DEBUG: "false"
-      ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
       # PostgreSQL (DBOS system tables share this DB in a `dbos` schema)
       DB_HOST: "db"
       DB_PORT: "5432"
       DB_NAME: "openeasd"
       DB_USER: "openeasd"
-      DB_PASSWORD: "change-me-in-production"
+      DB_PASSWORD: "joseph270591"
       # DBOS scan concurrency (Postgres has no single-writer lock)
       DBOS_SCAN_CONCURRENCY: "2"
       # Cloudflare Workers AI (optional — off unless set; or enter in the UI)
