@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: openeasd
       POSTGRES_USER: openeasd
-      POSTGRES_PASSWORD: "REPLACE_WITH_CURRENT_DB_PASSWORD"
+      POSTGRES_PASSWORD: "Joseph270591!!"
     volumes:
       - openeasd_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -25,7 +25,7 @@ services:
       - openeasd_logs:/app/logs
     environment: &app_env
       OPENEASD_ROLE: "web"
-      SECRET_KEY: "REPLACE_WITH_YOUR_EXISTING_SECRET_KEY"
+      SECRET_KEY: "thesecretkey"
       DEBUG: "false"
       ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
       CSRF_TRUSTED_ORIGINS: "http://192.168.9.176:8000"
@@ -33,7 +33,7 @@ services:
       DB_PORT: "5432"
       DB_NAME: "openeasd"
       DB_USER: "openeasd"
-      DB_PASSWORD: "REPLACE_WITH_CURRENT_DB_PASSWORD"
+      DB_PASSWORD: "Joseph270591!!"
       DBOS_SCAN_CONCURRENCY: "2"
       TOOL_SUBFINDER: "/usr/local/bin/pdtm-tools/subfinder"
       TOOL_DNSX: "/usr/local/bin/pdtm-tools/dnsx"
