@@ -29,7 +29,12 @@ services:
       OPENEASD_ROLE: "web"          # this container owns migrations/collectstatic/admin
       SECRET_KEY: "thesecretkey"
       DEBUG: "false"
-      ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0,192.168.9.176"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
+      DEBUG: "false"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,192.168.9.176"
+      CSRF_TRUSTED_ORIGINS: "http://192.168.9.176:8000"
+      # PostgreSQL (DBOS system tables share this DB in a `dbos` schema)
+      DB_HOST: "db"
       # PostgreSQL (DBOS system tables share this DB in a `dbos` schema)
       DB_HOST: "db"
       DB_PORT: "5432"
